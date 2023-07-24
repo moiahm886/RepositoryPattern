@@ -18,40 +18,80 @@ namespace RepositoryPattern.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Employee>> GetEmployees()
         {
-            var department = _department.GetDepartment();
-            return Ok(department);
+            try
+            {
+                var department = _department.GetDepartment();
+                return Ok(department);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest("Error occured");
+            }
         }
         [HttpGet("{Dnumber}")]
         public ActionResult<Employee> GetDepartmentByDnumber(int Dnumber)
         {
-            var department = _department.GetDepartmentByDnumber(Dnumber);
-            if (department == null)
+            try
             {
-                return NotFound();
+                var department = _department.GetDepartmentByDnumber(Dnumber);
+                if (department == null)
+                {
+                    return NotFound();
+                }
+                return Ok(department);
             }
-            return Ok(department);
+            catch (Exception)
+            {
+
+                return BadRequest("Error occured");
+            }
         }
         [HttpPost]
         public ActionResult<Department> AddDepartment(Department department)
         {
-            _department.AddDepartment(department);
-            return CreatedAtAction(nameof(GetDepartmentByDnumber), new { Dnumber = department.Dnumber }, department);
+            try
+            {
+                _department.AddDepartment(department);
+                return CreatedAtAction(nameof(GetDepartmentByDnumber), new { Dnumber = department.Dnumber }, department);
+            }
+            catch (Exception )
+            {
+
+                return BadRequest("Error occured");
+            }
         }
         [HttpPut]
         public IActionResult UpdateDepartment(int Dnumber, Department department)
         {
-            if (Dnumber != department.Dnumber)
+            try
             {
-                return BadRequest();
+                if (Dnumber != department.Dnumber)
+                {
+                    return BadRequest();
+                }
+                _department.UpdateDepartment(department);
+                return NoContent();
             }
-            _department.UpdateDepartment(department);
-            return NoContent();
+            catch (Exception)
+            {
+
+               return BadRequest("Error occured");
+            }
         }
         [HttpDelete("{Dnumber}")]
         public IActionResult DeleteDepartment(int Dnumber)
         {
-            _department.DeleteDepartment(Dnumber);
-            return NoContent();
+            try
+            {
+                _department.DeleteDepartment(Dnumber);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+
+                return BadRequest("Error occured");
+            }
         }
     }
 }
